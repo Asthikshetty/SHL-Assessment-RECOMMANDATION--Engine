@@ -2,8 +2,12 @@ from flask import Flask, request, jsonify
 import model
 
 app = Flask(__name__)
+@app.route('/')
+def home():
+    return "SHL Assessment Recommender API is running!", 200
 
 @app.route('/recommend', methods=['POST'])
+
 def recommend():
     data = request.json
     job_role = data.get('job_role')
