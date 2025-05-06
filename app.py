@@ -1,19 +1,21 @@
+import logging
 from flask import Flask, request, jsonify
-import model
 from flask_cors import CORS
+import model
 import os
-
 
 app = Flask(__name__)
 CORS(app)
-@app.route('/')
-def home():
-    return "SHL Assessment Recommender API is running!", 200
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
 
 @app.route('/recommend', methods=['POST'])
 def recommend():
     try:
         data = request.json
+        app.logger.info(f"Received request data: {data}")  # Log input
+        
         if not data:
             return jsonify({"error": "No JSON data received"}), 400
             
@@ -23,15 +25,21 @@ def recommend():
         if not job_role:
             return jsonify({"error": "job_role is required"}), 400
         
-        # Convert comma-separated string to list if needed
+        # Convert skills to list
         if isinstance(skills, str):
             skills = [s.strip() for s in skills.split(",") if s.strip()]
+        
+        app.logger.info(f"Processing job_role={job_role}, skills={skills}")
+        
+        # Add error handling for model
+        try:
+            recommendations = model.recommend_assessments(job_role, skills)
+        except Exception as model_error:
+            app.logger.error(f"Model error: {str(model_error)}")
+            return jsonify({"error": "Model processing failed"}), 500
             
-        recommendations = model.recommend_assessments(job_role, skills)
         return jsonify(recommendations.to_dict(orient='records'))
     
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
-if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))  # Render-compatible port
-    app.run(host='0.0.0.0', port=port, debug=False)  # Disable debug in production
+        app.logger.error(f"API error: {str(e)}", exc_info=True)  # Log full traceback
+        return jsonify({"error": "Internal server error"}), 500
