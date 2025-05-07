@@ -115,3 +115,5 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - SHL for providing assessment frameworks
 - scikit-learn for machine learning tools
 - Streamlit for the interactive web interface
+- ![image](https://github.com/user-attachments/assets/2db5358c-4f1e-40e5-a681-5c4a4af748fa)
+
