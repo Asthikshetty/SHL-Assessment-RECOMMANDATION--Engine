@@ -12,7 +12,7 @@ st.set_page_config(
 )
 
 # Define API URL - try to get from environment or use default
-API_URL = os.environ.get('API_URL', 'http://localhost:5000')
+API_URL = "https://shl-assessment-recommandation-engine-10.onrender.com"
 
 # App title and description
 st.title("SHL Assessment Recommender")
