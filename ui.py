@@ -42,9 +42,10 @@ if st.button("Get Assessment Recommendations", type="primary"):
                     "skills": [s.strip() for s in skills.split(",")] if skills else []
                 }
                 
-                # Log the request for debugging
-                st.debug(f"Sending request to {API_URL}/recommend")
-                st.debug(f"Payload: {json.dumps(payload)}")
+                # Log the request for debugging (using st.write with expander instead of debug)
+                with st.expander("Debug Info", expanded=False):
+                    st.write(f"Sending request to {API_URL}/recommend")
+                    st.write(f"Payload: {json.dumps(payload)}")
                 
                 # Send request to API
                 response = requests.post(
